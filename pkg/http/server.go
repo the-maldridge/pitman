@@ -26,8 +26,10 @@ func New(l hclog.Logger) (*Server, error) {
 		r:     chi.NewRouter(),
 		n:     &http.Server{},
 		f:     form.NewDecoder(),
+		forms: make(map[string]Form),
 		tmpls: pongo2.NewSet("html", sbl),
 	}
+	s.loadForms()
 
 	s.tmpls.Debug = true
 
@@ -38,6 +40,8 @@ func New(l hclog.Logger) (*Server, error) {
 	s.r.Get("/", s.rootIndex)
 
 	s.r.Get("/public/team/{id}/status", s.viewTeamStatus)
+
+	s.r.Get("/admin/compliance/{id}", s.viewComplianceForm)
 
 	return &s, nil
 }

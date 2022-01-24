@@ -1,0 +1,12 @@
+.flex-container {
+    display: flex;
+}
+
+.flex-item {
+    display: inline-block;
+}
+
+.form-section {
+    margin: 0.25em;
+    margin-bottom: 1em;
+}

@@ -1,0 +1,30 @@
+{% extends "base.p2" %}
+
+{% block title %}{{form.Title}}{% endblock %}
+
+{% block content %}
+<div>
+  {{form.Title}}
+  <form>
+    {% for section in form.Sections %}
+    <div class="form-section">
+      <div>{{section.Label}}</div>
+      <div class="flex-container">
+        {% for group in section.Groups %}
+        <fieldset class="flex-item">
+          <legend>{{group.Label}}</legend>
+          {% for field in group.Fields %}
+          <div>
+            <input type="checkbox" />
+            <label><strong>{{field.Label}}</strong>{% if field.Description or field.Hint %} - {{field.Description}}{% if field.Hint %} (<em>{{field.Hint}}</em>){% endif %}{% endif %}</label>
+          </div>
+          {% endfor %}
+        </fieldset>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    <input type="submit" />
+  </form>
+</div>
+{% endblock %}

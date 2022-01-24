@@ -1,0 +1,124 @@
+{
+    "Title": "Machine Compliance Check",
+    "Sections": [
+        {
+            "Label": "General",
+            "Groups": [
+                {
+                    "Label": "Whole Robot",
+                    "Fields": [
+                        {
+                            "Label": "Weight",
+                            "Description": "Less than 24 Pounds",
+                            "Hint": "with battery, detachable parts, etc."
+                        },
+                        {
+                            "Label": "Size",
+                            "Description": "Less than 24 inch cube",
+                            "Hint": "can be powered"
+                        },
+                        {
+                            "Label": "Team Number",
+                            "Hint": "visible?"
+                        },
+                        {
+                            "Label": "Multiple Configurations",
+                            "Hint": "check each one"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Label": "Control System",
+            "Groups": [
+                {
+                    "Label": "Joystick",
+                    "Fields": [
+                        {"Label": "No Labels"},
+                        {"Label": "No Rubber Bands"},
+                        {"Label": "No Tape of Any Kind"}
+                    ]
+                },
+                {
+                    "Label": "Cortex",
+                    "Fields": [
+                        {
+                            "Label": "Mounted",
+                            "Hint": "use mounting holes"
+                        },
+                        {
+                            "Label": "No Solder",
+                            "Hint": "use RK cables"
+                        },
+                        {
+                            "Label": "Power Switch",
+                            "Hint": "must be accessible"
+                        },
+                        {
+                            "Label": "Motor Ports",
+                            "Hint": "1 and 10 not used"
+                        },
+                        {
+                            "Label": "Battery",
+                            "Hint": "7.2v battery secured, holder/mount"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Label": "General Parts Check",
+            "Groups": [
+                {
+                    "Label": "Whole Robot",
+                    "Fields": [
+                        {
+                            "Label": "Adhesives",
+                            "Description": "No paint, adhesives, or tape on returnables",
+                            "Hint": "except as noted"
+                        },
+                        {
+                            "Label": "Modified Returnables",
+                            "Description": "No modified returnable parts",
+                            "Hint": "except servo horns and 3' belt"
+                        },
+                        {
+                            "Label": "Only Allowable Parts",
+                            "Description": "Correct count, material",
+                            "Hint": "see kit lists"
+                        },
+                        {
+                            "Label": "Detachable Parts",
+                            "Hint": "must be weighed/measured with robot"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Label": "Team Custom Parts",
+            "Description": "2 are allowed",
+            "Groups": [
+                {
+                    "Label": "Each Part",
+                    "Fields": [
+                        {
+                            "Label": "Size",
+                            "Description": "Each fits in a 2x2x4 cuboid"
+                        },
+                        {
+                            "Label": "Material",
+                            "Description": "Each made of a uniform material"
+                        },
+                        {
+                            "Label": "Raw Stock",
+                            "Description": "Rectangular or Cylindrical",
+                            "Hint": "if applicable"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
