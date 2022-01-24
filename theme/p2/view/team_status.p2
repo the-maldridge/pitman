@@ -1,0 +1,10 @@
+{% extends "base.p2" %}
+
+{% block title %}Team Status{% endblock %}
+
+{% block content %}
+<div>
+  Team status displayed here
+</div>
+{% endblock %}
+
