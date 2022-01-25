@@ -1,12 +1,30 @@
+textarea {
+    width: 100%;
+    height: 10em;
+    resize: none;
+}
+
+.center {
+    text-align: center;
+}
+
 .flex-container {
     display: flex;
+    flex-direction: row;
 }
 
 .flex-item {
     display: inline-block;
+    flex-grow: 1;
 }
 
 .form-section {
     margin: 0.25em;
     margin-bottom: 1em;
+}
+
+#content {
+    width: 65%;
+    margin-left: auto;
+    margin-right: auto;
 }

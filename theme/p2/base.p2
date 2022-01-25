@@ -6,7 +6,7 @@
     <link href="/static/css/theme.css" rel="stylesheet">
   </head>
   <body>
-    <div>
+    <div id="content">
       {% block content %}
       {% endblock %}
     </div>

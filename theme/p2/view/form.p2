@@ -4,11 +4,11 @@
 
 {% block content %}
 <div>
-  {{form.Title}}
+  <div class="center"><h1>{{form.Title}}</h1></div>
   <form method="POST">
     {% for section in form.Sections %}
     <div class="form-section">
-      <div>{{section.Label}}</div>
+      <div><h3>{{section.Label}}</h3></div>
       <div class="flex-container">
         {% for group in section.Groups %}
         <fieldset class="flex-item">
@@ -27,7 +27,9 @@
       </div>
     </div>
     {% endfor %}
-    <input type="submit" />
+    <div class="center">
+      <input type="submit" />
+    </div>
   </form>
 </div>
 {% endblock %}
