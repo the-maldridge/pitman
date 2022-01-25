@@ -35,13 +35,20 @@ type Team struct {
 // enough it could be extended for future forms if desired.
 type Form struct {
 	Title    string
-	Sections []struct {
-		Label  string
-		Groups []struct {
-			Label  string
-			Fields []FormField
-		}
-	}
+	Sections []FormSection
+}
+
+// FormSection is a container for one or more groups of fields.
+type FormSection struct {
+	Label  string
+	Groups []FormGroup
+}
+
+// FormGroup is a container for one or more fields with an associated
+// label.
+type FormGroup struct {
+	Label  string
+	Fields []FormField
 }
 
 // FormField is a single element of a form

@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-playground/form/v4"
+	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -26,11 +27,11 @@ func New(l hclog.Logger) (*Server, error) {
 		r:     chi.NewRouter(),
 		n:     &http.Server{},
 		f:     form.NewDecoder(),
+		rdb:   redis.NewClient(&redis.Options{}),
 		forms: make(map[string]Form),
 		tmpls: pongo2.NewSet("html", sbl),
 	}
 	s.loadForms()
-
 	s.tmpls.Debug = true
 
 	s.r.Use(middleware.Logger)
@@ -41,7 +42,8 @@ func New(l hclog.Logger) (*Server, error) {
 
 	s.r.Get("/public/team/{id}/status", s.viewTeamStatus)
 
-	s.r.Get("/admin/compliance/{id}", s.viewComplianceForm)
+	s.r.Get("/admin/form/{form}/{id}", s.viewForm)
+	s.r.Post("/admin/form/{form}/{id}", s.submitForm)
 
 	return &s, nil
 }

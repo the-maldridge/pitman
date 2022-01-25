@@ -5,7 +5,7 @@
 {% block content %}
 <div>
   {{form.Title}}
-  <form>
+  <form method="POST">
     {% for section in form.Sections %}
     <div class="form-section">
       <div>{{section.Label}}</div>
@@ -15,8 +15,16 @@
           <legend>{{group.Label}}</legend>
           {% for field in group.Fields %}
           <div>
-            <input type="checkbox" />
-            <label><strong>{{field.Label}}</strong>{% if field.Description or field.Hint %} - {{field.Description}}{% if field.Hint %} (<em>{{field.Hint}}</em>){% endif %}{% endif %}</label>
+            {% with field_id = section.ID()|add:"_"|add:group.ID()|add:"_"|add:field.ID() %}
+            <input type="checkbox"
+                   id="{{field_id}}"
+                   name="{{field_id}}"
+                   {% if field_id in fdata %}checked{% endif %} />
+            <label for="{{field_id}}">
+              <strong>{{field.Label}}</strong>
+              {% if field.Description or field.Hint %} - {{field.Description}}{% if field.Hint %} (<em>{{field.Hint}}</em>){% endif %}{% endif %}
+            </label>
+            {% endwith %}
           </div>
           {% endfor %}
         </fieldset>

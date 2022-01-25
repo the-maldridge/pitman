@@ -5,10 +5,12 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
 	"github.com/flosch/pongo2/v4"
+	"github.com/go-chi/chi/v5"
 )
 
 // ID computes the ID of a form by lower casing the name, then
@@ -17,7 +19,19 @@ func (f Form) ID() string {
 	return strings.ReplaceAll(strings.ToLower(f.Title), " ", "_")
 }
 
-// ID computes the ID of a field by lower casing hte name, then
+// ID computes the ID by lower casing the name, then replacing all
+// whitespace with underscores.
+func (f FormSection) ID() string {
+	return strings.ReplaceAll(strings.ToLower(f.Label), " ", "_")
+}
+
+// ID computes the ID by lower casing the name, then replacing all
+// whitespace with underscores.
+func (f FormGroup) ID() string {
+	return strings.ReplaceAll(strings.ToLower(f.Label), " ", "_")
+}
+
+// ID computes the ID of a field by lower casing the name, then
 // replacing all whitespace with underscores.
 func (f FormField) ID() string {
 	return strings.ReplaceAll(strings.ToLower(f.Label), " ", "_")
@@ -25,7 +39,6 @@ func (f FormField) ID() string {
 
 func (s *Server) loadForms() {
 	files, _ := filepath.Glob("forms/*.json")
-
 	for _, f := range files {
 		formFile, err := os.Open(f)
 		if err != nil {
@@ -48,6 +61,48 @@ func (s *Server) loadForms() {
 	}
 }
 
-func (s *Server) viewComplianceForm(w http.ResponseWriter, r *http.Request) {
-	s.doTemplate(w, r, "view/form.p2", pongo2.Context{"form": s.forms["machine_compliance_check"]})
+func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
+	teamnum := chi.URLParam(r, "id")
+	fname := chi.URLParam(r, "form")
+
+	res := s.rdb.Get(r.Context(), path.Join("forms", fname, teamnum))
+	bytes, err := res.Bytes()
+	if err != nil {
+		s.l.Debug("Error retrieving form data", "error", err)
+	}
+
+	fdata := make(map[string]string)
+	if err := json.Unmarshal(bytes, &fdata); err != nil {
+		s.l.Warn("Error unmarshaling form data", "error", err)
+	}
+
+	ctx := pongo2.Context{
+		"form":  s.forms[fname],
+		"fdata": fdata,
+	}
+
+	s.doTemplate(w, r, "view/form.p2", ctx)
+}
+
+func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
+	teamnum := chi.URLParam(r, "id")
+	fname := chi.URLParam(r, "form")
+	r.ParseForm()
+
+	fdata := make(map[string]string)
+	for key := range r.Form {
+		fdata[key] = r.FormValue(key)
+	}
+
+	bytes, err := json.Marshal(fdata)
+	if err != nil {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err.Error()})
+		return
+	}
+
+	if status := s.rdb.Set(r.Context(), path.Join("forms", fname, teamnum), bytes, 0); status.Err() != nil {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": status.Err()})
+		return
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
