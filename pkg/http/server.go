@@ -43,9 +43,12 @@ func New(l hclog.Logger) (*Server, error) {
 
 	s.r.Get("/public/team/{id}/status", s.viewTeamStatus)
 
-	s.r.Get("/admin/form/{form}/{id}", s.viewForm)
-	s.r.Post("/admin/form/{form}/{id}", s.submitForm)
-
+	s.r.Route("/admin", func(r chi.Router) {
+		r.Get("/teams", s.viewTeams)
+		r.Post("/teams", s.submitTeams)
+		r.Get("/form/{form}/{id}", s.viewForm)
+		r.Post("/form/{form}/{id}", s.submitForm)
+	})
 	return &s, nil
 }
 

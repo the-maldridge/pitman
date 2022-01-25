@@ -1,0 +1,43 @@
+{% extends "base.p2" %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+{% if not teams %}
+<div class="center">
+  <form method="POST" enctype="multipart/form-data">
+    <fieldset>
+      <legend>Load Teams</legend>
+      <label for="teams_file">Teams CSV</label>
+      <input type="file" id="teams_file" name="teams_file" />
+      <input type="submit" value="Load Teams" />
+    </fieldset>
+  </form>
+</div>
+{% else %}
+<div class="center">
+  <table>
+    <tr>
+      <th>Table</th>
+      <th>Number</th>
+      <th>Name</th>
+      <th>Hub</th>
+      <th>Actions</th>
+    </tr>
+    {% for team in teams %}
+    <tr>
+      <td>{{team.Table}}</td>
+      <td>{{team.Number}}</td>
+      <td>{{team.Name}}</td>
+      <td>{{team.Hub}}</td>
+      <td>
+        {% for form in forms %}
+        <a href="/admin/form/{{form}}/{{team.Number}}"><div class="btn">{{form}}</div></a>
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{% endif %}
+{% endblock %}

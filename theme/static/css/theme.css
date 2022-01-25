@@ -22,6 +22,23 @@ textarea {
     resize: none;
 }
 
+table {
+    width: 100%;
+}
+
+td {
+    padding: 0.25em;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.btn {
+    padding: 0.4em;
+    border: 2px black solid;
+}
+
 .center {
     text-align: center;
 }

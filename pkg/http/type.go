@@ -25,10 +25,13 @@ type Server struct {
 }
 
 // Team is a team object that may be checked in or have other distinct
-// status.  Once loaded the number cannot be changed.
+// status.  Everything is a string because internally nothing uses the
+// number as a number.
 type Team struct {
-	Number int
+	Hub    string
 	Name   string
+	Number string
+	Table  string
 }
 
 // Form is the dynamically loaded compliance form, but is generic
