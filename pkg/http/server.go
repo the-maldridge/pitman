@@ -31,6 +31,7 @@ func New(l hclog.Logger) (*Server, error) {
 		forms: make(map[string]Form),
 		tmpls: pongo2.NewSet("html", sbl),
 	}
+	pongo2.RegisterFilter("key", s.filterGetValueByKey)
 	s.loadForms()
 	s.tmpls.Debug = true
 

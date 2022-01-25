@@ -56,4 +56,5 @@ type FormField struct {
 	Label       string
 	Description string
 	Hint        string
+	Type        string
 }

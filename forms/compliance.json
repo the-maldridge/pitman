@@ -10,20 +10,24 @@
                         {
                             "Label": "Weight",
                             "Description": "Less than 24 Pounds",
-                            "Hint": "with battery, detachable parts, etc."
+                            "Hint": "with battery, detachable parts, etc.",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Size",
                             "Description": "Less than 24 inch cube",
-                            "Hint": "can be powered"
+                            "Hint": "can be powered",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Team Number",
-                            "Hint": "visible?"
+                            "Hint": "visible?",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Multiple Configurations",
-                            "Hint": "check each one"
+                            "Hint": "check each one",
+                            "Type": "checkbox"
                         }
                     ]
                 }
@@ -35,9 +39,9 @@
                 {
                     "Label": "Joystick",
                     "Fields": [
-                        {"Label": "No Labels"},
-                        {"Label": "No Rubber Bands"},
-                        {"Label": "No Tape of Any Kind"}
+                        {"Label": "No Labels", "Type": "checkbox"},
+                        {"Label": "No Rubber Bands", "Type": "checkbox"},
+                        {"Label": "No Tape of Any Kind", "Type": "checkbox"}
                     ]
                 },
                 {
@@ -45,23 +49,28 @@
                     "Fields": [
                         {
                             "Label": "Mounted",
-                            "Hint": "use mounting holes"
+                            "Hint": "use mounting holes",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "No Solder",
-                            "Hint": "use RK cables"
+                            "Hint": "use RK cables",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Power Switch",
-                            "Hint": "must be accessible"
+                            "Hint": "must be accessible",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Motor Ports",
-                            "Hint": "1 and 10 not used"
+                            "Hint": "1 and 10 not used",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Battery",
-                            "Hint": "7.2v battery secured, holder/mount"
+                            "Hint": "7.2v battery secured, holder/mount",
+                            "Type": "checkbox"
                         }
                     ]
                 }
@@ -76,21 +85,25 @@
                         {
                             "Label": "Adhesives",
                             "Description": "No paint, adhesives, or tape on returnables",
-                            "Hint": "except as noted"
+                            "Hint": "except as noted",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Modified Returnables",
                             "Description": "No modified returnable parts",
-                            "Hint": "except servo horns and 3' belt"
+                            "Hint": "except servo horns and 3' belt",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Only Allowable Parts",
                             "Description": "Correct count, material",
-                            "Hint": "see kit lists"
+                            "Hint": "see kit lists",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Detachable Parts",
-                            "Hint": "must be weighed/measured with robot"
+                            "Hint": "must be weighed/measured with robot",
+                            "Type": "checkbox"
                         }
                     ]
                 }
@@ -105,16 +118,33 @@
                     "Fields": [
                         {
                             "Label": "Size",
-                            "Description": "Each fits in a 2x2x4 cuboid"
+                            "Description": "Each fits in a 2x2x4 cuboid",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Material",
-                            "Description": "Each made of a uniform material"
+                            "Description": "Each made of a uniform material",
+                            "Type": "checkbox"
                         },
                         {
                             "Label": "Raw Stock",
                             "Description": "Rectangular or Cylindrical",
-                            "Hint": "if applicable"
+                            "Hint": "if applicable",
+                            "Type": "checkbox"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "Label": "Additional Information",
+            "Groups": [
+                {
+                    "Label": "Comments",
+                    "Fields": [
+                        {
+                            "Label": "General Comments",
+                            "Type": "textbox"
                         }
                     ]
                 }
