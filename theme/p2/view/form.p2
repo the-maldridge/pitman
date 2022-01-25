@@ -5,6 +5,15 @@
 {% block content %}
 <div>
   <div class="center"><h1>{{form.Title}}</h1></div>
+  {% if team %}
+  <hr />
+  <div class="center flex-container">
+    <div class="flex-item">#{{team.Number}}</div>
+    <div class="flex-item">{{team.Name}}</div>
+    <div class="flex-item">{{team.Hub}}</div>
+  </div>
+  <hr />
+  {% endif %}
   <form method="POST">
     {% for section in form.Sections %}
     <div class="form-section">

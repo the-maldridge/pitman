@@ -65,8 +65,21 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 	teamnum := chi.URLParam(r, "id")
 	fname := chi.URLParam(r, "form")
 
+	tres := s.rdb.Get(r.Context(), path.Join("teams", teamnum))
+	bytes, err := tres.Bytes()
+	if err != nil {
+		s.l.Warn("Error retrieving team", "error", err, "key", path.Join("teams", teamnum))
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+	team := Team{}
+	if err := json.Unmarshal(bytes, &team); err != nil {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		return
+	}
+
 	res := s.rdb.Get(r.Context(), path.Join("forms", fname, teamnum))
-	bytes, err := res.Bytes()
+	bytes, err = res.Bytes()
 	if err != nil {
 		s.l.Debug("Error retrieving form data", "error", err)
 	}
@@ -77,6 +90,7 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := pongo2.Context{
+		"team": team,
 		"form":  s.forms[fname],
 		"fdata": fdata,
 	}
@@ -104,5 +118,5 @@ func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": status.Err()})
 		return
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin/teams", http.StatusSeeOther)
 }

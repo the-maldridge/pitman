@@ -1,2 +1,4 @@
-<label for="{{field_id}}" /><br />
-<textarea id="{{field_id}}" name="{{field_id}}">{{fdata|key:field_id}}</textarea>
+<div class="noprint">
+  <label for="{{field_id}}" /><br />
+  <textarea id="{{field_id}}" name="{{field_id}}">{{fdata|key:field_id}}</textarea>
+</div>
