@@ -1,0 +1,15 @@
+{
+    "Title": "Internal Configuration",
+    "Sections": [
+        {
+            "Label": "Big Board",
+            "Groups": [
+                {
+                    "Fields": [
+                        {"Label": "Flash Message", "Type": "textbox"}
+                    ]
+                }
+            ]
+        }
+    ]
+}

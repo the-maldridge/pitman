@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30;url=/public/bigboard">
+    <title>Big Board</title>
+    <link href="/static/css/theme.css" rel="stylesheet">
+  </head>
+  <body>
+    <div>
+      <div class="center"><h1>Not Done Yet</h1></div>
+      <hr />
+      <hr />
+      <div class="flex-container">
+        {% for team in teams %}
+        {% if not team.Done %}
+        <div class="flex-item center status-box">
+          {{team.Team.Name}}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      <hr />
+      <hr />
+      <div class="center">
+        <h2>{{icfg.big_board__flash_message}}</h2>
+      </div>
+    </div>
+  </body>
+</html>

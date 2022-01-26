@@ -42,6 +42,7 @@ func New(l hclog.Logger) (*Server, error) {
 	s.r.Get("/", s.rootIndex)
 
 	s.r.Get("/public/team/{id}/status", s.viewTeamStatus)
+	s.r.Get("/public/bigboard", s.viewBigBoard)
 
 	s.r.Route("/admin", func(r chi.Router) {
 		r.Get("/teams", s.viewTeams)

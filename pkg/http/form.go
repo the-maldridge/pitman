@@ -62,18 +62,23 @@ func (s *Server) loadForms() {
 }
 
 func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
+	// team number 0 is special and is used for internal forms
+	// that configure the system.  This is used to suppress some
+	// errors below where the system reaches for a team and it
+	// doesn't actually exist.  This is pretty safe since team
+	// number zero can't actually be issued for other reasons.
 	teamnum := chi.URLParam(r, "id")
 	fname := chi.URLParam(r, "form")
 
 	tres := s.rdb.Get(r.Context(), path.Join("teams", teamnum))
 	bytes, err := tres.Bytes()
-	if err != nil {
+	if err != nil && teamnum != "0" {
 		s.l.Warn("Error retrieving team", "error", err, "key", path.Join("teams", teamnum))
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 	team := Team{}
-	if err := json.Unmarshal(bytes, &team); err != nil {
+	if err := json.Unmarshal(bytes, &team); err != nil && teamnum != "0" {
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
