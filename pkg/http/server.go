@@ -41,12 +41,11 @@ func New(l hclog.Logger) (*Server, error) {
 	s.fileServer(s.r, "/static", http.Dir("theme/static"))
 	s.r.Get("/", s.rootIndex)
 
-	s.r.Get("/public/team/{id}/status", s.viewTeamStatus)
 	s.r.Get("/public/bigboard", s.viewBigBoard)
 
 	s.r.Route("/admin", func(r chi.Router) {
-		r.Get("/teams", s.viewTeams)
-		r.Post("/teams", s.submitTeams)
+		r.Get("/", s.viewAdminLanding)
+		r.Post("/", s.submitAdminLanding)
 		r.Get("/form/{form}/{id}", s.viewForm)
 		r.Post("/form/{form}/{id}", s.submitForm)
 	})

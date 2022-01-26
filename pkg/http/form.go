@@ -123,5 +123,5 @@ func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": status.Err()})
 		return
 	}
-	http.Redirect(w, r, "/admin/teams", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }

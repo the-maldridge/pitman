@@ -9,11 +9,7 @@ import (
 	"github.com/flosch/pongo2/v4"
 )
 
-func (s *Server) viewTeamStatus(w http.ResponseWriter, r *http.Request) {
-	s.doTemplate(w, r, "view/team_status.p2", nil)
-}
-
-func (s *Server) viewTeams(w http.ResponseWriter, r *http.Request) {
+func (s *Server) viewAdminLanding(w http.ResponseWriter, r *http.Request) {
 	res := s.rdb.Keys(r.Context(), "teams/*")
 	if res.Err() != nil {
 		s.l.Warn("Error listing team IDs", "error", res.Err())
@@ -47,10 +43,10 @@ func (s *Server) viewTeams(w http.ResponseWriter, r *http.Request) {
 		"forms": s.forms,
 	}
 
-	s.doTemplate(w, r, "view/team_admin.p2", ctx)
+	s.doTemplate(w, r, "view/admin_landing.p2", ctx)
 }
 
-func (s *Server) submitTeams(w http.ResponseWriter, r *http.Request) {
+func (s *Server) submitAdminLanding(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	f, _, err := r.FormFile("teams_file")
 	if err != nil {
@@ -71,5 +67,5 @@ func (s *Server) submitTeams(w http.ResponseWriter, r *http.Request) {
 			s.l.Warn("Error Loading Team", "team", team["Number"], "error", res.Err())
 		}
 	}
-	http.Redirect(w, r, "/admin/teams", http.StatusSeeOther)
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
