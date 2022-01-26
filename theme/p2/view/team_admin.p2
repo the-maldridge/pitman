@@ -31,9 +31,9 @@
       <td>{{team.Name}}</td>
       <td>{{team.Hub}}</td>
       <td>
-        {% for form in forms %}
-        <a href="/admin/form/{{form}}/{{team.Number}}"><div class="btn">{{form}}</div></a>
-        {% endfor %}
+      {% for form, fcfg in forms %}
+      <a href="/admin/form/{{form}}/{{team.Number}}"><div class="btn">{{fcfg.Title}}</div></a>
+      {% endfor %}
       </td>
     </tr>
     {% endfor %}
