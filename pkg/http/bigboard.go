@@ -67,8 +67,10 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		}
 
 		f := make(map[string]string)
-		if err := json.Unmarshal(bytes, &f); err != nil {
-			s.l.Warn("Error unmarshaling form data", "error", err)
+		if err == nil {
+			if err := json.Unmarshal(bytes, &f); err != nil {
+				s.l.Warn("Error unmarshaling form data", "error", err)
+			}
 		}
 		tfields := []string{}
 		for k := range f {
