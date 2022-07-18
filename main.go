@@ -11,7 +11,7 @@ import (
 func main() {
 	appLogger := hclog.New(&hclog.LoggerOptions{
 		Name:  "webui",
-		Level: hclog.LevelFromString("TRACE"),
+		Level: hclog.LevelFromString(os.Getenv("LOG_LEVEL")),
 	})
 
 	srv, err := http.New(appLogger)
