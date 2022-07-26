@@ -1,7 +1,0 @@
-{% extends "base.p2" %}
-
-{% block title %}PitMan Index{% endblock %}
-
-{% block content %}
-Hello
-{% endblock %}

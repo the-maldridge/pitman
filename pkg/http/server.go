@@ -39,7 +39,7 @@ func New(l hclog.Logger) (*Server, error) {
 	s.r.Use(middleware.Heartbeat("/healthz"))
 
 	s.fileServer(s.r, "/static", http.Dir("theme/static"))
-	s.r.Get("/", s.rootIndex)
+	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/public/bigboard", http.StatusSeeOther) })
 
 	s.r.Get("/public/bigboard", s.viewBigBoard)
 
@@ -50,10 +50,6 @@ func New(l hclog.Logger) (*Server, error) {
 		r.Post("/form/{form}/{id}", s.submitForm)
 	})
 	return &s, nil
-}
-
-func (s *Server) rootIndex(w http.ResponseWriter, r *http.Request) {
-	s.doTemplate(w, r, "index.p2", nil)
 }
 
 // Serve binds, initializes the mux, and serves forever.
