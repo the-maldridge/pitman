@@ -95,7 +95,7 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := pongo2.Context{
-		"team": team,
+		"team":  team,
 		"form":  s.forms[fname],
 		"fdata": fdata,
 	}
@@ -124,4 +124,59 @@ func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
+}
+
+func (s *Server) viewFormSet(w http.ResponseWriter, r *http.Request) {
+	fname := chi.URLParam(r, "form")
+
+	if _, ok := s.forms[fname]; !ok {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": "Unknown form"})
+		return
+	}
+
+	res := s.rdb.Keys(r.Context(), "teams/*")
+	if res.Err() != nil {
+		s.l.Warn("Error listing team IDs", "error", res.Err())
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": res.Err()})
+		return
+	}
+
+	teams := make([]Team, len(res.Val()))
+	forms := make([]map[string]string, len(res.Val()))
+	for i, key := range res.Val() {
+		tres := s.rdb.Get(r.Context(), key)
+		bytes, err := tres.Bytes()
+		if err != nil {
+			s.l.Warn("Error retrieving team", "error", err, "key", key)
+			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+			return
+		}
+		team := Team{}
+		if err := json.Unmarshal(bytes, &team); err != nil {
+			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+			return
+		}
+		teams[i] = team
+
+		res := s.rdb.Get(r.Context(), path.Join("forms", fname, team.Number))
+		bytes, err = res.Bytes()
+		if err != nil {
+			s.l.Debug("Error retrieving form data", "fname", fname, "team", team.Number, "error", err)
+		}
+
+		fdata := make(map[string]string)
+		if err := json.Unmarshal(bytes, &fdata); err != nil {
+			s.l.Warn("Error unmarshaling form data", "error", err)
+		}
+		forms[i] = fdata
+	}
+	s.l.Debug("forms", "data", forms)
+
+	ctx := pongo2.Context{
+		"teams": teams,
+		"form":  s.forms[fname],
+		"forms": forms,
+	}
+
+	s.doTemplate(w, r, "view/form_set.p2", ctx)
 }

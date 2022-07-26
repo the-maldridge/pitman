@@ -79,7 +79,7 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		fdata = append(fdata, struct {
 			Team   Team
 			Status []string
-			Done bool
+			Done   bool
 		}{
 			Team:   team,
 			Status: tfields,

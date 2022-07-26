@@ -32,6 +32,7 @@ func New(l hclog.Logger) (*Server, error) {
 		tmpls: pongo2.NewSet("html", sbl),
 	}
 	pongo2.RegisterFilter("key", s.filterGetValueByKey)
+	pongo2.RegisterFilter("index", s.filterGetValueAtIndex)
 	s.loadForms()
 	s.tmpls.Debug = true
 
@@ -39,7 +40,9 @@ func New(l hclog.Logger) (*Server, error) {
 	s.r.Use(middleware.Heartbeat("/healthz"))
 
 	s.fileServer(s.r, "/static", http.Dir("theme/static"))
-	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, "/public/bigboard", http.StatusSeeOther) })
+	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/public/bigboard", http.StatusSeeOther)
+	})
 
 	s.r.Get("/public/bigboard", s.viewBigBoard)
 
@@ -48,6 +51,7 @@ func New(l hclog.Logger) (*Server, error) {
 		r.Post("/", s.submitAdminLanding)
 		r.Get("/form/{form}/{id}", s.viewForm)
 		r.Post("/form/{form}/{id}", s.submitForm)
+		r.Get("/formset/{form}", s.viewFormSet)
 	})
 	return &s, nil
 }

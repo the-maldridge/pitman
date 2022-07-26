@@ -3,42 +3,5 @@
 {% block title %}{{form.Title}}{% endblock %}
 
 {% block content %}
-<div>
-  <div class="center"><h1>{{form.Title}}</h1></div>
-  {% if team %}
-  <hr />
-  <div class="center flex-container">
-    <div class="flex-item">#{{team.Number}}</div>
-    <div class="flex-item">{{team.Name}}</div>
-    <div class="flex-item">{{team.Hub}}</div>
-  </div>
-  <hr />
-  {% endif %}
-  <form method="POST">
-    {% for section in form.Sections %}
-    <div class="form-section">
-      <div class="form-section-header">{{section.Label}}</div>
-      <div class="flex-container">
-        {% for group in section.Groups %}
-        <fieldset class="flex-item">
-          <legend>{{group.Label}}</legend>
-          {% for field in group.Fields %}
-          <div>
-            {% with field_id = section.ID()|add:"_"|add:group.ID()|add:"_"|add:field.ID() %}
-            {% with field_type = "partials/widget_"|add:field.Type|add:".p2" %}
-            {% include field_type %}
-            {% endwith %}
-            {% endwith %}
-          </div>
-          {% endfor %}
-        </fieldset>
-        {% endfor %}
-      </div>
-    </div>
-    {% endfor %}
-    <div class="center noprint">
-      <input type="submit" />
-    </div>
-  </form>
-</div>
+{% include "partials/form.p2" %}
 {% endblock %}

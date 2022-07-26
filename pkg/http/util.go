@@ -19,6 +19,10 @@ func (s *Server) filterGetValueByKey(in *pongo2.Value, param *pongo2.Value) (*po
 	return pongo2.AsValue(m[param.String()]), nil
 }
 
+func (s *Server) filterGetValueAtIndex(in *pongo2.Value, param *pongo2.Value) (*pongo2.Value, *pongo2.Error) {
+	return in.Index(param.Integer()), nil
+}
+
 func (s *Server) csvToMap(reader io.Reader) []map[string]string {
 	r := csv.NewReader(reader)
 	rows := []map[string]string{}

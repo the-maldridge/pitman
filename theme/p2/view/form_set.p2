@@ -1,0 +1,10 @@
+{% extends "base.p2" %}
+
+{% block title %}{{form.Title}}{% endblock %}
+
+{% block content %}
+{% for team in teams %}
+{% include "partials/form.p2" with team=team fdata=forms|index:forloop.Counter0 %}
+<span style="break-after:always"></span>
+{% endfor %}
+{% endblock %}
