@@ -1,0 +1,9 @@
+<input type="number"
+       id="{{field_id}}"
+       name="{{field_id}}"
+       step="0.1"
+       {% if field_id in fdata %}value="{{ fdata|key:field_id }}"{% endif %} />
+<label for="{{field_id}}">
+  <strong>{{field.Label}}</strong>
+  {% if field.Description or field.Hint %} - {{field.Description}}{% if field.Hint %} (<em>{{field.Hint}}</em>){% endif %}{% endif %}
+</label>
