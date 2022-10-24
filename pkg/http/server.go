@@ -1,6 +1,7 @@
 package http
 
 import (
+	"os"
 	"fmt"
 	"net/http"
 	"strings"
@@ -27,7 +28,7 @@ func New(l hclog.Logger) (*Server, error) {
 		r:     chi.NewRouter(),
 		n:     &http.Server{},
 		f:     form.NewDecoder(),
-		rdb:   redis.NewClient(&redis.Options{}),
+		rdb:   redis.NewClient(&redis.Options{Addr: os.Getenv("REDIS_ADDR")}),
 		forms: make(map[string]Form),
 		tmpls: pongo2.NewSet("html", sbl),
 	}
@@ -38,6 +39,7 @@ func New(l hclog.Logger) (*Server, error) {
 
 	s.r.Use(middleware.Logger)
 	s.r.Use(middleware.Heartbeat("/healthz"))
+	s.r.Use(s.checkStorage)
 
 	s.fileServer(s.r, "/static", http.Dir("theme/static"))
 	s.r.Get("/", func(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +64,18 @@ func (s *Server) Serve(bind string) error {
 	s.n.Addr = bind
 	s.n.Handler = s.r
 	return s.n.ListenAndServe()
+}
+
+func (s *Server) checkStorage(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if res := s.rdb.Ping(r.Context()); res.Err() != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "Fatal Error: Storage service is unavailable: %v (%T)", res.Err(), res.Err())
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (s *Server) templateErrorHandler(w http.ResponseWriter, err error) {
