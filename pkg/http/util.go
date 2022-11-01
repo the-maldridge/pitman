@@ -3,6 +3,7 @@ package http
 import (
 	"encoding/csv"
 	"io"
+	"strings"
 
 	"github.com/flosch/pongo2/v4"
 )
@@ -38,6 +39,11 @@ func (s *Server) csvToMap(reader io.Reader) []map[string]string {
 		}
 		if header == nil {
 			header = record
+			for col := range header {
+				header[col] = strings.ReplaceAll(header[col], "Team Name", "Name")
+				header[col] = strings.ReplaceAll(header[col], "Team Number", "Number")
+				header[col] = strings.ReplaceAll(header[col], "Hub Name", "Hub")
+			}
 		} else {
 			dict := map[string]string{}
 			for i := range header {
