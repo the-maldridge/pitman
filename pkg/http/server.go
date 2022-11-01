@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
@@ -64,6 +65,11 @@ func (s *Server) Serve(bind string) error {
 	s.n.Addr = bind
 	s.n.Handler = s.r
 	return s.n.ListenAndServe()
+}
+
+// Shutdown requests the underlying server gracefully cease operation.
+func (s *Server) Shutdown(ctx context.Context) error {
+	return s.n.Shutdown(ctx)
 }
 
 func (s *Server) checkStorage(next http.Handler) http.Handler {
