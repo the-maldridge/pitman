@@ -70,8 +70,7 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 	teamnum := chi.URLParam(r, "id")
 	fname := chi.URLParam(r, "form")
 
-	tres := s.rdb.Get(r.Context(), path.Join("teams", teamnum))
-	bytes, err := tres.Bytes()
+	bytes, err := s.kv.Get(r.Context(), path.Join("teams", teamnum))
 	if err != nil && teamnum != "0" {
 		s.l.Warn("Error retrieving team", "error", err, "key", path.Join("teams", teamnum))
 		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
@@ -83,8 +82,7 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := s.rdb.Get(r.Context(), path.Join("forms", fname, teamnum))
-	bytes, err = res.Bytes()
+	bytes, err = s.kv.Get(r.Context(), path.Join("forms", fname, teamnum))
 	if err != nil {
 		s.l.Debug("Error retrieving form data", "error", err)
 	}
@@ -119,8 +117,8 @@ func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if status := s.rdb.Set(r.Context(), path.Join("forms", fname, teamnum), bytes, 0); status.Err() != nil {
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": status.Err()})
+	if err := s.kv.Put(r.Context(), path.Join("forms", fname, teamnum), bytes); err != nil {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
@@ -134,18 +132,17 @@ func (s *Server) viewFormSet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := s.rdb.Keys(r.Context(), "teams/*")
-	if res.Err() != nil {
-		s.l.Warn("Error listing team IDs", "error", res.Err())
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": res.Err()})
+	res, err := s.kv.Keys(r.Context(), "teams/*")
+	if err != nil {
+		s.l.Warn("Error listing team IDs", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 
-	teams := make([]Team, len(res.Val()))
-	forms := make([]map[string]string, len(res.Val()))
-	for i, key := range res.Val() {
-		tres := s.rdb.Get(r.Context(), key)
-		bytes, err := tres.Bytes()
+	teams := make([]Team, len(res))
+	forms := make([]map[string]string, len(res))
+	for i, key := range res {
+		bytes, err := s.kv.Get(r.Context(), key)
 		if err != nil {
 			s.l.Warn("Error retrieving team", "error", err, "key", key)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
@@ -158,8 +155,7 @@ func (s *Server) viewFormSet(w http.ResponseWriter, r *http.Request) {
 		}
 		teams[i] = team
 
-		res := s.rdb.Get(r.Context(), path.Join("forms", fname, team.Number))
-		bytes, err = res.Bytes()
+		bytes, err = s.kv.Get(r.Context(), path.Join("forms", fname, team.Number))
 		if err != nil {
 			s.l.Debug("Error retrieving form data", "fname", fname, "team", team.Number, "error", err)
 		}

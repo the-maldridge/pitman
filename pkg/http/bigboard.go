@@ -24,15 +24,14 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 
 	teams := make([]Team, len(res.Val()))
 	for i, key := range res.Val() {
-		tres := s.rdb.Get(r.Context(), key)
-		bytes, err := tres.Bytes()
+		res, err := s.kv.Get(r.Context(), key)
 		if err != nil {
 			s.l.Warn("Error retrieving team", "error", err, "key", key)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 			return
 		}
 		team := Team{}
-		if err := json.Unmarshal(bytes, &team); err != nil {
+		if err := json.Unmarshal(res, &team); err != nil {
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 			return
 		}
@@ -60,15 +59,14 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		Done   bool
 	}{}
 	for _, team := range teams {
-		res := s.rdb.Get(r.Context(), path.Join("forms", fname, team.Number))
-		bytes, err := res.Bytes()
+		res, err := s.kv.Get(r.Context(), path.Join("forms", fname, team.Number))
 		if err != nil {
 			s.l.Debug("Error retrieving form data", "error", err)
 		}
 
 		f := make(map[string]string)
 		if err == nil {
-			if err := json.Unmarshal(bytes, &f); err != nil {
+			if err := json.Unmarshal(res, &f); err != nil {
 				s.l.Warn("Error unmarshaling form data", "error", err)
 			}
 		}
@@ -87,13 +85,12 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	res2 := s.rdb.Get(r.Context(), path.Join("forms", "internal_configuration", "0"))
-	bytes, err := res2.Bytes()
+	res2, err := s.kv.Get(r.Context(), path.Join("forms", "internal_configuration", "0"))
 	if err != nil {
 		s.l.Trace("No internal_configuration")
 	}
 	icfg := make(map[string]string)
-	if err := json.Unmarshal(bytes, &icfg); err != nil {
+	if err := json.Unmarshal(res2, &icfg); err != nil {
 		s.l.Warn("Error unmarshaling form data", "error", err)
 	}
 

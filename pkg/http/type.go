@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/flosch/pongo2/v4"
@@ -9,6 +10,16 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-hclog"
 )
+
+// KV implementations provide a storage interface to a persistent
+// location either on disk or on a remote location.
+type KV interface {
+	Keys(context.Context, string) ([]string, error)
+	Get(context.Context, string) ([]byte, error)
+	Put(context.Context, string, []byte) error
+	Ping(context.Context) error
+	Close() error
+}
 
 // Server wraps up all the request routers and associated components
 // that serve various parts of the nbuild stack.
@@ -19,6 +30,7 @@ type Server struct {
 	n   *http.Server
 	f   *form.Decoder
 	rdb *redis.Client
+	kv  KV
 
 	forms map[string]Form
 	tmpls *pongo2.TemplateSet

@@ -4,35 +4,34 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/flosch/pongo2/v4"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-playground/form/v4"
-	"github.com/go-redis/redis/v8"
-	"github.com/hashicorp/go-hclog"
 )
 
 // New initializes the server with its default routers.
-func New(l hclog.Logger) (*Server, error) {
+func New(opts ...Option) (*Server, error) {
 	sbl, err := pongo2.NewSandboxedFilesystemLoader("theme/p2")
 	if err != nil {
 		return nil, err
 	}
 
-	l = l.Named("http")
-
 	s := Server{
-		l:     l,
 		r:     chi.NewRouter(),
 		n:     &http.Server{},
 		f:     form.NewDecoder(),
-		rdb:   redis.NewClient(&redis.Options{Addr: os.Getenv("REDIS_ADDR")}),
 		forms: make(map[string]Form),
 		tmpls: pongo2.NewSet("html", sbl),
 	}
+
+	// Apply options
+	for _, o := range opts {
+		o(&s)
+	}
+
 	pongo2.RegisterFilter("key", s.filterGetValueByKey)
 	pongo2.RegisterFilter("index", s.filterGetValueAtIndex)
 	s.loadForms()
@@ -74,9 +73,9 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 func (s *Server) checkStorage(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if res := s.rdb.Ping(r.Context()); res.Err() != nil {
+		if err := s.kv.Ping(r.Context()); err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "Fatal Error: Storage service is unavailable: %v (%T)", res.Err(), res.Err())
+			fmt.Fprintf(w, "Fatal Error: Storage service is unavailable: %v (%T)", err, err)
 			return
 		}
 

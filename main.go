@@ -4,12 +4,14 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
 	"github.com/hashicorp/go-hclog"
 
 	"github.com/the-maldridge/pitman/pkg/http"
+	"github.com/the-maldridge/pitman/pkg/kv"
 )
 
 func main() {
@@ -18,7 +20,17 @@ func main() {
 		Level: hclog.LevelFromString(os.Getenv("LOG_LEVEL")),
 	})
 
-	srv, err := http.New(appLogger)
+	var store http.KV
+	storeImpl := strings.ToLower(os.Getenv("PITMAN_STORE"))
+	if storeImpl == "" {
+		storeImpl = "redis"
+	}
+	switch storeImpl {
+	case "redis":
+		store = kv.NewRedis()
+	}
+
+	srv, err := http.New(http.WithLogger(appLogger), http.WithStorage(store))
 	if err != nil {
 		appLogger.Error("Error during webserver init", "error", err)
 		os.Exit(1)

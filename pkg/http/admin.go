@@ -10,15 +10,15 @@ import (
 )
 
 func (s *Server) viewAdminLanding(w http.ResponseWriter, r *http.Request) {
-	res := s.rdb.Keys(r.Context(), "teams/*")
-	if res.Err() != nil {
-		s.l.Warn("Error listing team IDs", "error", res.Err())
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": res.Err()})
+	res, err := s.kv.Keys(r.Context(), "teams/*")
+	if err != nil {
+		s.l.Warn("Error listing team IDs", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 
-	teams := make([]Team, len(res.Val()))
-	for i, key := range res.Val() {
+	teams := make([]Team, len(res))
+	for i, key := range res {
 		tres := s.rdb.Get(r.Context(), key)
 		bytes, err := tres.Bytes()
 		if err != nil {
@@ -63,8 +63,8 @@ func (s *Server) submitAdminLanding(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		if res := s.rdb.Set(r.Context(), path.Join("teams", team["Number"]), teamBytes, 0); res.Err() != nil {
-			s.l.Warn("Error Loading Team", "team", team["Number"], "error", res.Err())
+		if err := s.kv.Put(r.Context(), path.Join("teams", team["Number"]), teamBytes); err != nil {
+			s.l.Warn("Error Loading Team", "team", team["Number"], "error", err)
 		}
 	}
 	http.Redirect(w, r, "/admin", http.StatusSeeOther)
