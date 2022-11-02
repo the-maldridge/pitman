@@ -24,7 +24,7 @@ func main() {
 	var err error
 	storeImpl := strings.ToLower(os.Getenv("PITMAN_STORE"))
 	if storeImpl == "" {
-		storeImpl = "redis"
+		storeImpl = "bolt"
 	}
 	switch storeImpl {
 	case "redis":
