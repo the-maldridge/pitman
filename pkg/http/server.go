@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/flosch/pongo2/v4"
@@ -50,6 +51,9 @@ func New(opts ...Option) (*Server, error) {
 	s.r.Get("/public/bigboard", s.viewBigBoard)
 
 	s.r.Route("/admin", func(r chi.Router) {
+		if password, ok := os.LookupEnv("PITMAN_PASSWORD"); ok {
+			r.Use(middleware.BasicAuth("Pitman Admin", map[string]string{"admin": password}))
+		}
 		r.Get("/", s.viewAdminLanding)
 		r.Post("/", s.submitAdminLanding)
 		r.Get("/form/{form}/{id}", s.viewForm)
