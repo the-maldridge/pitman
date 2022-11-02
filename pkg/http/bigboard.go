@@ -15,15 +15,15 @@ import (
 func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 	fname := "master_status"
 
-	res := s.rdb.Keys(r.Context(), "teams/*")
-	if res.Err() != nil {
-		s.l.Warn("Error listing team IDs", "error", res.Err())
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": res.Err()})
+	keys, err := s.kv.Keys(r.Context(), "teams/*")
+	if err != nil {
+		s.l.Warn("Error listing team IDs", "error", err)
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 
-	teams := make([]Team, len(res.Val()))
-	for i, key := range res.Val() {
+	teams := make([]Team, len(keys))
+	for i, key := range keys {
 		res, err := s.kv.Get(r.Context(), key)
 		if err != nil {
 			s.l.Warn("Error retrieving team", "error", err, "key", key)
@@ -32,6 +32,7 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		}
 		team := Team{}
 		if err := json.Unmarshal(res, &team); err != nil {
+			s.l.Error("Error unmarshaling json", "error", err)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 			return
 		}

@@ -21,13 +21,20 @@ func main() {
 	})
 
 	var store http.KV
+	var err error
 	storeImpl := strings.ToLower(os.Getenv("PITMAN_STORE"))
 	if storeImpl == "" {
 		storeImpl = "redis"
 	}
 	switch storeImpl {
 	case "redis":
-		store = kv.NewRedis()
+		store, err = kv.NewRedis()
+	case "bolt":
+		store, err = kv.NewBolt(appLogger)
+	default:
+		appLogger.Error("PITMAN_STORE requests undefined storage", "store", storeImpl)
+		appLogger.Error("Defined values are: 'redis', 'bolt'")
+		os.Exit(1)
 	}
 
 	srv, err := http.New(http.WithLogger(appLogger), http.WithStorage(store))
@@ -56,6 +63,9 @@ func main() {
 		err := srv.Shutdown(shutdownCtx)
 		if err != nil {
 			appLogger.Error("Error occured during shutdown", "error", err)
+		}
+		if err := store.Close(); err != nil {
+			appLogger.Error("Error closing storage", "error", err)
 		}
 		serverStopCtx()
 	}()

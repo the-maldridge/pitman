@@ -7,7 +7,6 @@ import (
 	"github.com/flosch/pongo2/v4"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/form/v4"
-	"github.com/go-redis/redis/v8"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -27,10 +26,9 @@ type Server struct {
 	l hclog.Logger
 	r chi.Router
 
-	n   *http.Server
-	f   *form.Decoder
-	rdb *redis.Client
-	kv  KV
+	n  *http.Server
+	f  *form.Decoder
+	kv KV
 
 	forms map[string]Form
 	tmpls *pongo2.TemplateSet

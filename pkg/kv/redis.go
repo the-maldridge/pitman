@@ -14,8 +14,8 @@ type Redis struct {
 }
 
 // NewRedis returns a Redis Key/Value store.
-func NewRedis() *Redis {
-	return &Redis{db: redis.NewClient(&redis.Options{Addr: os.Getenv("REDIS_ADDR")})}
+func NewRedis() (*Redis, error) {
+	return &Redis{db: redis.NewClient(&redis.Options{Addr: os.Getenv("REDIS_ADDR")})}, nil
 }
 
 // Keys returns a list of string of keys below a certain globbed

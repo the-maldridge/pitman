@@ -13,5 +13,6 @@ require (
 	github.com/hashicorp/go-hclog v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
+	go.etcd.io/bbolt v1.3.6 // indirect
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect
 )

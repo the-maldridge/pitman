@@ -19,8 +19,8 @@ func (s *Server) viewAdminLanding(w http.ResponseWriter, r *http.Request) {
 
 	teams := make([]Team, len(res))
 	for i, key := range res {
-		tres := s.rdb.Get(r.Context(), key)
-		bytes, err := tres.Bytes()
+		s.l.Trace("Pulling team blob", "key", key)
+		bytes, err := s.kv.Get(r.Context(), key)
 		if err != nil {
 			s.l.Warn("Error retrieving team", "error", err, "key", key)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
@@ -28,6 +28,7 @@ func (s *Server) viewAdminLanding(w http.ResponseWriter, r *http.Request) {
 		}
 		team := Team{}
 		if err := json.Unmarshal(bytes, &team); err != nil {
+			s.l.Error("Error unmarshalling team", "error", err)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 			return
 		}

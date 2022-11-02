@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -55,6 +56,11 @@ func New(opts ...Option) (*Server, error) {
 		r.Post("/form/{form}/{id}", s.submitForm)
 		r.Get("/formset/{form}", s.viewFormSet)
 	})
+
+	if s.kv == nil {
+		s.l.Error("KV is nil!")
+		return nil, errors.New("storage is undefined")
+	}
 	return &s, nil
 }
 
