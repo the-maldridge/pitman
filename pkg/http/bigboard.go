@@ -32,7 +32,6 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		}
 		team := Team{}
 		if err := json.Unmarshal(res, &team); err != nil {
-			s.l.Error("Error unmarshaling json", "error", err)
 			s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 			return
 		}
@@ -68,7 +67,7 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		f := make(map[string]string)
 		if err == nil {
 			if err := json.Unmarshal(res, &f); err != nil {
-				s.l.Warn("Error unmarshaling form data", "error", err)
+				s.l.Debug("Error unmarshaling form data", "error", err)
 			}
 		}
 		tfields := []string{}
