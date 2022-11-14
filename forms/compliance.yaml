@@ -1,0 +1,94 @@
+---
+title: Machine Compliance Check
+sections:
+  - label: General
+    groups:
+      - label: Whole Robot
+        fields:
+          - label: Weight
+            description: Less than 24 Pounds
+            hint: with battery, detachable parts, etc.
+            type: checkbox
+          - label: Size
+            description: Less than 24 inch cube
+            hint: can be powered
+            type: checkbox
+          - label: Team Number
+            description: visible?
+            type: checkbox
+          - label: Multiple Configurations
+            hint: check each one
+            type: checkbox
+  - label: Statistics
+    groups:
+      - label: Whole Robot
+        fields:
+          - label: Weight
+            description: Weight in pounds.
+            type: number
+  - label: Control System
+    groups:
+      - label: Joystick
+        fields:
+          - label: No Labels
+            type: checkbox
+          - label: No Rubber Bands
+            type: checkbox
+          - label: No Type of Any Kind
+            type: checkbox
+      - label: Cortex
+        fields:
+          - label: Mounted
+            hint: use mounting holes
+            type: checkbox
+          - label: No Solder
+            hint: use RK cables
+            type: checkbox
+          - label: Power Switch
+            hint: must be accessible
+            type: checkbox
+          - label: Motor Ports
+            hint: 1 and 10 not used
+            type: checkbox
+          - label: Battery
+            hint: 7.2v battery secured, holder/mount
+            type: checkbox
+  - label: General Parts Check
+    groups:
+      - label: Whole Robot
+        fields:
+          - label: Adhesives
+            description: No paint, adhesives, or tape on returnables
+            hint: except as noted
+            type: checkbox
+          - label: Modified Returnables
+            description: No modified returnable parts
+            hint: except servo horns and 3' belt
+            type: checkbox
+          - label: Only Allowable Parts
+            description: Correct count, material
+            hint: see kit lists
+            type: checkbox
+          - label: Detachable Parts
+            hint: must be weighed/measured with robot
+            type: checkbox
+  - label: Team Custom Parts
+    groups:
+      - label: Each Part
+        fields:
+          - label: Size
+            description: Each fits in a 2x2x4 cuboid
+            type: checkbox
+          - label: Material
+            description: Each made of a uniform material
+            type: checkbox
+          - label: Raw Stock
+            description: Rectangular or Cylindrical
+            hint: if applicable
+            type: checkbox
+  - label: Additional Information
+    groups:
+      - label: Comments
+        fields:
+          - label: General Comments
+            type: textbox

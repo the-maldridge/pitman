@@ -1,0 +1,12 @@
+---
+title: Master Status
+sections:
+  - label: Check In
+    groups:
+      - fields:
+          - label: Machine Compliance
+            type: checkbox
+          - label: Driver Wristbands
+            type: checkbox
+          - label: Participant Forms
+            type: checkbox

@@ -11,6 +11,8 @@ import (
 
 	"github.com/flosch/pongo2/v4"
 	"github.com/go-chi/chi/v5"
+
+	"gopkg.in/yaml.v3"
 )
 
 // ID computes the ID of a form by lower casing the name, then
@@ -38,7 +40,7 @@ func (f FormField) ID() string {
 }
 
 func (s *Server) loadForms() {
-	files, _ := filepath.Glob("forms/*.json")
+	files, _ := filepath.Glob("forms/*.yaml")
 	for _, f := range files {
 		formFile, err := os.Open(f)
 		if err != nil {
@@ -52,7 +54,7 @@ func (s *Server) loadForms() {
 		}
 		formFile.Close()
 		formStruct := Form{}
-		if err := json.Unmarshal(bytes, &formStruct); err != nil {
+		if err := yaml.Unmarshal(bytes, &formStruct); err != nil {
 			s.l.Warn("Error loading form", "file", f, "error", err)
 			continue
 		}

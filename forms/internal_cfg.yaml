@@ -1,0 +1,8 @@
+---
+title: Internal Configuration
+sections:
+  - label: Big Board
+    groups:
+      - fields:
+          - label: Flash Message
+            type: textbox
