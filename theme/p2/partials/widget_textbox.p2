@@ -1,4 +1,4 @@
 <div class="noprint">
   <label for="{{field_id}}" /><br />
-  <textarea id="{{field_id}}" name="{{field_id}}">{{fdata|key:field_id}}</textarea>
+  <textarea id="{{field_id}}" name="{{field_id}}" {% if edit_disable %}disabled{% endif %}>{{fdata|key:field_id}}</textarea>
 </div>

@@ -1,5 +1,5 @@
 <div>
-  <div class="center"><h1>{{form.Title}}</h1></div>
+  {% if not edit_disable %}<div class="center"><h1>{{form.Title}}</h1></div>{% endif %}
   {% if team %}
   <hr />
   <div class="center flex-container">
@@ -31,8 +31,10 @@
       </div>
     </div>
     {% endfor %}
+    {% if not edit_disable %}
     <div class="center noprint">
       <input type="submit" />
     </div>
+    {% endif %}
   </form>
 </div>

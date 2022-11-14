@@ -174,6 +174,7 @@ func (s *Server) viewFormSet(w http.ResponseWriter, r *http.Request) {
 		"teams": teams,
 		"form":  s.forms[fname],
 		"forms": forms,
+		"edit_disable": true,
 	}
 
 	s.doTemplate(w, r, "view/form_set.p2", ctx)

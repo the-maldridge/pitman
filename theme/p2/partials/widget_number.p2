@@ -2,6 +2,7 @@
        id="{{field_id}}"
        name="{{field_id}}"
        step="0.1"
+       {% if edit_disable %}disabled{% endif %}
        {% if field_id in fdata %}value="{{ fdata|key:field_id }}"{% endif %} />
 <label for="{{field_id}}">
   <strong>{{field.Label}}</strong>

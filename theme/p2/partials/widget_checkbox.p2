@@ -1,6 +1,7 @@
 <input type="checkbox"
        id="{{field_id}}"
        name="{{field_id}}"
+       {% if edit_disable %}disabled{% endif %}
        {% if field_id in fdata %}checked{% endif %} />
 <label for="{{field_id}}">
   <strong>{{field.Label}}</strong>
