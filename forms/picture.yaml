@@ -1,0 +1,17 @@
+---
+title: Robot Picture
+sections:
+  - lable: Picture
+    groups:
+      - label: Angle 1
+        fields:
+          - label: Picture
+            description: Primary Robot Picture
+            hint: Team number should be visible.
+            type: picture
+      - label: Angle 2
+        fields:
+          - label: Picture
+            description: Secondary Angle
+            hint: Team number should be visible.
+            type: picture

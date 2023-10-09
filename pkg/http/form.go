@@ -1,6 +1,8 @@
 package http
 
 import (
+	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -106,16 +108,27 @@ func (s *Server) viewForm(w http.ResponseWriter, r *http.Request) {
 func (s *Server) submitForm(w http.ResponseWriter, r *http.Request) {
 	teamnum := chi.URLParam(r, "id")
 	fname := chi.URLParam(r, "form")
-	r.ParseForm()
+	if err := r.ParseMultipartForm(5 * 1024 * 1024); err != nil {
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
+		s.l.Error("Error parsing form", "form", fname, "team", teamnum, "error", err)
+		return
+	}
 
 	fdata := make(map[string]string)
-	for key := range r.Form {
+	for key := range r.MultipartForm.Value {
 		fdata[key] = r.FormValue(key)
+	}
+	for f, fh := range r.MultipartForm.File {
+		buf := new(bytes.Buffer)
+		fn, _ := fh[0].Open()
+		io.Copy(buf, fn)
+		fn.Close()
+		fdata[f] = base64.StdEncoding.EncodeToString(buf.Bytes())
 	}
 
 	bytes, err := json.Marshal(fdata)
 	if err != nil {
-		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err.Error()})
+		s.doTemplate(w, r, "errors/internal.p2", pongo2.Context{"error": err})
 		return
 	}
 
@@ -171,9 +184,9 @@ func (s *Server) viewFormSet(w http.ResponseWriter, r *http.Request) {
 	s.l.Debug("forms", "data", forms)
 
 	ctx := pongo2.Context{
-		"teams": teams,
-		"form":  s.forms[fname],
-		"forms": forms,
+		"teams":        teams,
+		"form":         s.forms[fname],
+		"forms":        forms,
 		"edit_disable": true,
 	}
 

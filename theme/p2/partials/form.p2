@@ -9,7 +9,7 @@
   </div>
   <hr />
   {% endif %}
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     {% for section in form.Sections %}
     <div class="form-section">
       <div class="form-section-header">{{section.Label}}</div>

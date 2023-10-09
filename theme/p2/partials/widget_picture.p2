@@ -1,0 +1,16 @@
+{% if !edit_disable %}
+<input type="file"
+       id="{{field_id}}"
+       name="{{field_id}}"
+       accept="image/png image/jpeg"
+       capture="environment"
+>
+<label for="{{field_id}}">
+    <strong>{{field.Label}}</strong>
+    {% if field.Description or field.Hint %} - {{field.Description}}{% if field.Hint %} (<em>{{field.Hint}}</em>){% endif %}{% endif %}
+</label>
+{% endif %}
+{% if field_id in fdata %}
+<br />
+<img width="60%" src="data:image;base64,{{fdata|key:field_id}}">
+{% endif %}
