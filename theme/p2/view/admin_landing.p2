@@ -33,7 +33,7 @@
       <td>{{team.Name}}</td>
       <td>{{team.Hub}}</td>
       <td>
-      {% for form, fcfg in forms %}
+      {% for form, fcfg in forms sorted %}
       {% if form != "internal_configuration" %}{# This is dumb, but filters the internal form out #}
       <a href="/admin/form/{{form}}/{{team.Number}}"><div class="btn">{{fcfg.Title}}</div></a>
       {% endif %}
