@@ -2,8 +2,8 @@
 <input type="file"
        id="{{field_id}}"
        name="{{field_id}}"
-       accept="image/png image/jpeg"
-       capture="environment"
+       accept="image/*"
+       capture="user"
 >
 <label for="{{field_id}}">
     <strong>{{field.Label}}</strong>
