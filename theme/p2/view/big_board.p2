@@ -8,9 +8,15 @@
   </head>
   <body>
     <div>
-      <div class="center"><h1>Not Done Yet</h1></div>
-      <hr />
-      <hr />
+      <div class="center">
+        {% if not alldone %}
+        <h1>Not Done Yet</h1>
+        <hr />
+        <hr />
+        {% else %}
+        <h1>All teams present and accounted for!</h1>
+        {% endif %}
+      </div>
       <div class="flex-container">
         {% for team in teams %}
         {% if not team.Done %}

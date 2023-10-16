@@ -58,6 +58,7 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 		Status []string
 		Done   bool
 	}{}
+	alldone := true
 	for _, team := range teams {
 		res, err := s.kv.Get(r.Context(), path.Join("forms", fname, team.Number))
 		if err != nil {
@@ -83,6 +84,10 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 			Status: tfields,
 			Done:   len(tfields) == len(fields),
 		})
+		alldone = alldone && (len(tfields) == len(fields))
+		s.l.Debug("Done check", "alldone", alldone,
+			"team", team.Number,
+			"teamdone", len(tfields) == len(fields))
 	}
 
 	res2, err := s.kv.Get(r.Context(), path.Join("forms", "internal_configuration", "0"))
@@ -95,9 +100,10 @@ func (s *Server) viewBigBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := pongo2.Context{
-		"teams":  fdata,
-		"fields": fields,
-		"icfg":   icfg,
+		"teams":   fdata,
+		"fields":  fields,
+		"icfg":    icfg,
+		"alldone": alldone,
 	}
 	s.doTemplate(w, r, "view/big_board.p2", ctx)
 }
